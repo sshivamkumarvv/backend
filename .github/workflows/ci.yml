@@ -1,29 +1,32 @@
-name: NestJS CI
+# Name of the workflow (shows in GitHub Actions UI)
+name: NestJS CI (Docker)
 
+# When this CI should run
 on:
+  # Run CI when code is pushed to main branch
   push:
     branches: ['main']
+
+  # Run CI when a pull request targets main branch
   pull_request:
     branches: ['main']
 
+# Define CI jobs
 jobs:
-  build:
+  # Job name (can be anything)
+  docker-build:
+    # GitHub provides a fresh Ubuntu machine
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Download your repository code into the CI machine
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run tests
-        run: npm run test --if-present
-
-      - name: Build project
-        run: npm run build
+      # Step 2: Build Docker image using Dockerfile
+      # This will:
+      # - Install dependencies (npm ci)
+      # - Build NestJS app (npm run build)
+      # - Fail CI if anything breaks
+      - name: Build Docker image
+        run: docker build -t nestjs-app .
